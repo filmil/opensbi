@@ -236,7 +236,7 @@ _bss_zero:
 	call	fw_save_info
 	MOV_5R	a0, s0, a1, s1, a2, s2, a3, s3, a4, s4
 
-#ifdef FW_FDT_PATH
+#if defined(FW_FDT_PATH) || defined(FW_FDT_PATH_INC)
 	/* Override previous arg1 */
 	lla	a1, fw_fdt_bin
 #endif
@@ -828,12 +828,19 @@ _reset_regs:
 
 	ret
 
-#ifdef FW_FDT_PATH
+#if defined(FW_FDT_PATH) || defined(FW_FDT_PATH_INC)
 	.section .rodata
 	.align 4
 	.globl fw_fdt_bin
 fw_fdt_bin:
+  #if defined(FW_FDT_PATH)
 	.incbin FW_FDT_PATH
+  #endif
+  // Use #include if you want to include the bytes as asm source.
+  // See for details: https://groups.google.com/g/bazel-discuss/c/QZtmmW3B_w0
+  #if defined(FW_FDT_PATH_INC)
+	#include FW_FDT_PATH_INC
+  #endif
 #ifdef FW_FDT_PADDING
 	.fill FW_FDT_PADDING, 1, 0
 #endif
