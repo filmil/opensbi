@@ -102,9 +102,15 @@ jump_addr_local:
 	.dword FW_JUMP_ADDR
 #endif
 payload_bin:
-#ifndef FW_PAYLOAD_PATH
+#if defined(FW_PAYLOAD_PATH)
+	.incbin	FW_PAYLOAD_PATH
+#else
+  // Use #include if you want to include the bytes as asm source.
+  // See for details: https://groups.google.com/g/bazel-discuss/c/QZtmmW3B_w0
+  #if defined(FW_PAYLOAD_PATH_INC)
+	#include FW_PAYLOAD_PATH_INC
+  #else
 	wfi
 	j	payload_bin
-#else
-	.incbin	FW_PAYLOAD_PATH
+  #endif
 #endif
