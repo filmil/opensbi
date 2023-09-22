@@ -839,6 +839,7 @@ fw_fdt_bin:
   // Use #include if you want to include the bytes as asm source.
   // See for details: https://groups.google.com/g/bazel-discuss/c/QZtmmW3B_w0
   #if defined(FW_FDT_PATH_INC)
+	.align 12
 	#include FW_FDT_PATH_INC
   #endif
 #ifdef FW_FDT_PADDING
